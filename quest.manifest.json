@@ -1,0 +1,69 @@
+{
+    "name": "quest",
+    "description": "Agent Village - A 3D game for visualizing and managing AI agent tasks",
+    "version": "0.1.0",
+    "modules": {
+        "core": {
+            "path": "src/state",
+            "description": "Core game state, types, and memory system",
+            "entryFiles": [
+                "types.ts",
+                "gameStore.ts",
+                "memoryStore.ts"
+            ]
+        },
+        "game": {
+            "path": "src/game",
+            "description": "3D scene, environment, and building registry",
+            "entryFiles": [
+                "Village.tsx",
+                "registry.ts"
+            ]
+        },
+        "tasks": {
+            "path": "src/tasks",
+            "description": "Agent task definitions, store, and execution",
+            "entryFiles": [
+                "TaskDefinition.ts",
+                "taskStore.ts"
+            ]
+        },
+        "ui": {
+            "path": "src/ui",
+            "description": "React UI components for HUD and task management",
+            "entryFiles": [
+                "HUD.tsx",
+                "TaskEditor.tsx"
+            ]
+        },
+        "buildings": {
+            "path": "src/buildings",
+            "description": "3D building visual components",
+            "entryFiles": [
+                "Building.tsx"
+            ]
+        },
+        "villagers": {
+            "path": "src/villagers",
+            "description": "Villager character components",
+            "entryFiles": [
+                "Villager.tsx"
+            ]
+        },
+        "cli": {
+            "path": "src/cli",
+            "description": "Gemini CLI integration for self-improvement",
+            "entryFiles": [
+                "QuestAgent.ts"
+            ]
+        }
+    },
+    "workflows": {
+        "improve-quest": ".agent/workflows/improve-quest.md"
+    },
+    "commands": {
+        "dev": "npm run dev",
+        "build": "npm run build",
+        "lint": "npm run lint"
+    }
+}
