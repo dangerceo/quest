@@ -53,7 +53,7 @@ Open your browser to `http://localhost:5173` and watch the magic happen! ✨
 
 ---
 
-## 🛠️ Commands inside Quest
+## 🛠️ Commands inside Quest (theoretical)
 
 While inside the interface, you can use specialized commands that the game translates for the Gemini CLI:
 
@@ -66,16 +66,6 @@ While inside the interface, you can use specialized commands that the game trans
 
 ---
 
-## 🎨 Interface Preview
-
-The game uses a [React + Vite](https://vite.dev/) stack with a soft, vaporware-inspired aesthetic. It features:
-
-* **Glassmorphism** panels.
-* **Animated Transitions** between CLI outputs.
-* **Recursive Terminal** for direct LLM interaction.
-
----
-
 ## 🍬 Contributing
 
 Want to help Quest grow faster?
@@ -85,4 +75,4 @@ Want to help Quest grow faster?
 3. Commit your changes.
 4. Open a Pull Request!
 
-**Let's build something that builds itself!** 🤖💕
+**Let's build something that builds itself!**
