@@ -3,6 +3,7 @@ import { useGameStore } from '../state/gameStore';
 import type { BuildingType } from '../state/types';
 import { BUILDING_REGISTRY } from '../game/registry';
 import { TaskEditor } from './TaskEditor';
+import { MissionTracker } from './MissionTracker';
 
 export function HUD() {
     const gold = useGameStore((s) => s.gold);
@@ -48,6 +49,9 @@ export function HUD() {
                 <span className="sun-icon">{getTimeIcon(gameTime)}</span>
                 <span>{formatTime(gameTime)}</span>
             </div>
+
+            {/* Mission Tracker */}
+            <MissionTracker />
         </>
     );
 }

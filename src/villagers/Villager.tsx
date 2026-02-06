@@ -3,6 +3,8 @@ import { useFrame } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import * as THREE from 'three';
 import { useGameStore } from '../state/gameStore';
+import { useAgentServer } from '../hooks/useAgentServer';
+import { ThoughtBubble } from '../game/ThoughtBubble';
 import type { Villager as VillagerType } from '../state/types';
 
 interface VillagerProps {
@@ -21,7 +23,8 @@ const VILLAGER_COLORS = [
 export function Villager({ villager }: VillagerProps) {
     const groupRef = useRef<THREE.Group>(null);
     const bodyRef = useRef<THREE.Mesh>(null);
-    const tasks = useGameStore((s) => s.tasks);
+    const gameTasks = useGameStore((s) => s.tasks);
+    const { tasks: agentTasks } = useAgentServer();
 
     // Deterministic color based on villager id
     const colorIndex = useMemo(() => {
@@ -80,16 +83,30 @@ export function Villager({ villager }: VillagerProps) {
         }
 
         // Working animation
-        if (villager.state === 'working' && bodyRef.current) {
+        const isWorking = villager.state === 'working' ||
+                         (villager.assignedTaskId && agentTasks[villager.assignedTaskId]?.state === 'running') ||
+                         (villager.assignedTaskId && agentTasks[villager.assignedTaskId]?.state === 'thinking');
+
+        if (isWorking && bodyRef.current) {
             bodyRef.current.rotation.z = Math.sin(Date.now() * 0.01) * 0.1;
         }
     });
 
     // Get task info for this villager
-    const assignedTask = tasks.find((t) => t.id === villager.assignedTaskId);
+    const assignedGameTask = gameTasks.find((t) => t.id === villager.assignedTaskId);
+    const assignedAgentTask = villager.assignedTaskId ? agentTasks[villager.assignedTaskId] : null;
+
+    // Get latest thought
+    const lastLog = assignedAgentTask?.output[assignedAgentTask.output.length - 1];
+    const thoughtText = lastLog?.text
+        ? (lastLog.text.length > 50 ? lastLog.text.substring(0, 50) + '...' : lastLog.text)
+        : (assignedAgentTask?.state === 'thinking' ? 'Thinking...' : null);
 
     return (
         <group ref={groupRef} position={villager.position}>
+            {/* Thought Bubble for Agent Tasks */}
+            {thoughtText && <ThoughtBubble text={thoughtText} visible={true} />}
+
             {/* Body (pill shape) */}
             <mesh ref={bodyRef} position={[0, 0.35, 0]} castShadow>
                 <capsuleGeometry args={[0.15, 0.25, 8, 16]} />
@@ -153,8 +170,8 @@ export function Villager({ villager }: VillagerProps) {
                 {villager.name}
             </Text>
 
-            {/* Task indicator */}
-            {assignedTask && (
+            {/* Task indicator for Game Tasks */}
+            {assignedGameTask && (
                 <group position={[0, 1.2, 0]}>
                     <mesh>
                         <planeGeometry args={[0.6, 0.15]} />
@@ -166,10 +183,23 @@ export function Villager({ villager }: VillagerProps) {
                         <meshBasicMaterial color="#555555" />
                     </mesh>
                     {/* Progress bar fill */}
-                    <mesh position={[(assignedTask.progress / 100 - 1) * 0.275, 0, 0.002]}>
-                        <planeGeometry args={[0.55 * (assignedTask.progress / 100), 0.08]} />
+                    <mesh position={[(assignedGameTask.progress / 100 - 1) * 0.275, 0, 0.002]}>
+                        <planeGeometry args={[0.55 * (assignedGameTask.progress / 100), 0.08]} />
                         <meshBasicMaterial color="#4ecdc4" />
                     </mesh>
+                </group>
+            )}
+
+            {/* Task indicator for Agent Tasks (Spinner) */}
+            {assignedAgentTask && assignedAgentTask.state !== 'completed' && (
+                <group position={[0, 1.2, 0]}>
+                     <mesh>
+                        <planeGeometry args={[0.6, 0.15]} />
+                        <meshBasicMaterial color="#333333" transparent opacity={0.7} />
+                    </mesh>
+                    <Text position={[0, 0, 0.01]} fontSize={0.08} color="#4ecdc4">
+                        {assignedAgentTask.state.toUpperCase()}
+                    </Text>
                 </group>
             )}
 

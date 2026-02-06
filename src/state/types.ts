@@ -70,7 +70,7 @@ export interface GameState {
 
     spawnVillager: (name: string, position: [number, number, number]) => void;
     moveVillager: (id: string, target: [number, number, number]) => void;
-    assignVillagerToTask: (villagerId: string, taskId: string) => void;
+    assignVillagerToTask: (villagerId: string, taskId: string, buildingId?: string) => void;
 
     addToast: (message: string, type: Toast['type']) => void;
     removeToast: (id: string) => void;

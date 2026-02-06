@@ -38,7 +38,7 @@ export function TaskEditor({ buildingId, onClose }: TaskEditorProps) {
         // Auto-assign an idle villager
         const idleVillager = villagers.find((v) => v.state === 'idle' && !v.assignedTaskId);
         if (idleVillager) {
-            assignVillagerToTask(idleVillager.id, task.id);
+            assignVillagerToTask(idleVillager.id, task.id, buildingId);
         }
 
         // Trigger real Gemini task on server
