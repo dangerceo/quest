@@ -180,9 +180,10 @@ export const useGameStore = create<GameState>()(
         }));
       },
 
-      assignVillagerToTask: (villagerId, taskId) => {
+      assignVillagerToTask: (villagerId, taskId, buildingId) => {
         const task = get().tasks.find((t) => t.id === taskId);
-        const building = task ? get().buildings.find((b) => b.id === task.buildingId) : null;
+        const targetBuildingId = task ? task.buildingId : buildingId;
+        const building = targetBuildingId ? get().buildings.find((b) => b.id === targetBuildingId) : null;
 
         set((state) => ({
           villagers: state.villagers.map((v) =>
